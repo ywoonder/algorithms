@@ -1,0 +1,55 @@
+#include <iostream>
+#include <stdlib.h>
+#include <time.h>  
+using namespace std;
+
+void swap(int &var_1, int &var_2)
+{
+	int temp = var_1;
+	var_1 = var_2;
+	var_2 = temp;
+}
+
+void insertion_sort(int *arr, int index)
+{
+	if(arr[index]<arr[index-1])
+	{
+		swap(arr[index],arr[index-1]);
+		insertion_sort(arr,index-1);
+	}
+}
+
+void sort(int *arr, int length)
+{
+	for(int i=1;i<length;i++)
+		insertion_sort(arr,i);
+}
+
+void print_array(int *arr, int n)
+{
+	for(int i=0;i<n; i++)
+		std::cout<< arr[i] <<" ";
+	std::cout<<endl;
+}
+
+void generate_array(int *arr, int n)
+{
+	  srand (time(NULL));
+    for(int i=0;i<n; i++)
+  		arr[i] =   rand() % 15 + 1;
+}
+
+int main() {
+   
+	int length = 10;
+	int *arr = new int[length];
+
+	generate_array(arr,length);
+	print_array(arr,length);	
+	sort(arr,length);
+	print_array(arr,length);	
+
+	delete[] arr;
+    return 0;
+	
+}
