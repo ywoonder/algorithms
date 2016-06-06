@@ -1,0 +1,142 @@
+/*convert number to text*/
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+#define PULUH	10
+#define RATUS	100
+#define RIBU	1000
+#define JUTA	1000000
+#define MILYAR	1000000000
+#define TRILYUN	1000000000000
+#define STEP	1000
+
+string to_text(int input)
+{
+	string text = "";
+	switch(input)
+	{
+	case 0	: text	= "nol";		break;
+	case 1	: text	= "satu";		break;
+	case 2	: text	= "dua";		break;
+	case 3	: text	= "tiga";		break;
+	case 4	: text	= "empat";		break;
+	case 5	: text	= "lima";		break;
+	case 6	: text	= "enam";		break;
+	case 7	: text	= "tujuh";		break;
+	case 8	: text	= "delapan";	break;
+	case 9	: text	= "sembilan";	break;
+	default : text	= "";		break;
+	}
+	return text;
+}
+
+string hundred_to_text(__int64 temp,string text = "")
+{
+		if (temp / RATUS >0 )
+		{
+			text += (temp/RATUS ==1) ? "se" : (to_text (temp/RATUS)+ " ");
+			text += "ratus ";
+			temp = temp%RATUS;
+			if(temp==0) return text;
+		}
+		else if(temp / PULUH >0)
+		{
+			if( temp/PULUH <2)
+			{
+				int temp3 = temp%PULUH;
+				switch (temp3)
+				{
+				case 0: text += "sepuluh "; break;
+				case 1: text += "sebelas "; break;
+				default : text = text + to_text(temp3) +" belas ";
+				}
+				return text;
+			}
+			else{
+				text += to_text(temp/PULUH);
+				text += " puluh ";
+				temp = temp%PULUH;
+				if(temp==0) return text;
+			}
+		}
+	
+		else{
+		text += to_text(temp) +" ";
+		return text;
+		}
+	return hundred_to_text(temp,text);
+}
+
+string num_to_text(__int64 input, string text, unsigned __int64 counter = TRILYUN)
+{ 
+	int temp = 0;
+	temp = input / counter;
+	switch(counter)
+	{
+	case TRILYUN:
+		if(input/TRILYUN>0)
+		{	
+			text += hundred_to_text(input/TRILYUN);
+			text += "trilyun ";
+			input %= TRILYUN;
+		}
+	break;
+	case MILYAR:
+		if(input/MILYAR>0)
+		{	
+			text += hundred_to_text(input/MILYAR);
+			text += "milyar ";
+			input %= MILYAR;
+		}
+	break;
+	case JUTA:
+		if(input/JUTA>0)
+		{	
+			text += hundred_to_text(input/JUTA);
+			text += "juta ";
+			input %= JUTA;
+		}
+	break;
+	case RIBU:
+		if(input/RIBU>0)
+		{	
+			if(input/RIBU == 1 )
+				text += "seribu ";
+			else 
+			{ 
+				text += hundred_to_text(input/RIBU);
+ 				text += "ribu ";
+			}
+			input %= RIBU;
+		}
+	break;
+	default:
+			text += hundred_to_text(input);
+			return text;
+	}
+				if(input==0) return text;
+	counter /= STEP;
+	if(counter > 0)
+	return num_to_text(input, text, counter);
+}
+
+void main()
+{
+	int			max_input	=  1;
+	__int64		*input		=  new __int64[max_input];
+	string		*text		=  new string [max_input];
+		
+	for (int i=0; i<max_input; i++)	
+	{	
+		cin	>> input[i];
+		text[i] = (input[i]== 0 )?"nol": num_to_text(input[i],"");
+	}
+	
+	for (int i=0; i<max_input; i++)	
+		cout << text[i] << endl;
+	
+	system("Pause");
+}
